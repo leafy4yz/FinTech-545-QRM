@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qrmlib"
+version = "0.6.0"
+description = "FinTech 545 Quantitative Risk Management building blocks"
+requires-python = ">=3.9"
+dependencies = ["numpy", "pandas", "scipy", "matplotlib"]
+
+[tool.setuptools]
+packages = ["qrmlib"]
