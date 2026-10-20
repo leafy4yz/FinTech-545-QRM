@@ -1,0 +1,80 @@
+"""
+qrmlib -- reusable building blocks for FinTech 545 (Quantitative Risk Management).
+Combined library: Assignment 1 + Assignment 2 + the Week 3-5 midterm tools.
+
+Modules
+-------
+Week 1-2 (Assignment 1)
+  moments        : four moments (excess kurt), first4_moments (raw kurt, A1), Jarque-Bera
+  fitting        : normal and Student t MLE fits, compare_normal_t (AIC/AICc/BIC table)
+  criteria       : aic, aicc, bic
+  regression     : OLS with standard errors, MLE regression with normal / t errors
+  correlation    : complete-case / pairwise matrices, Pearson vs Spearman, cov <-> corr
+  conditional    : partitioned-normal conditionals, conditional-mean line and band
+  timeseries     : ACF/PACF plot, AR/MA fits ranked by AICc (needs statsmodels)
+Week 3
+  missing        : which cells are observed; joint-observation counts
+  cholesky       : hand-written Cholesky (PD and PSD)
+  psd_repair     : Rebonato-Jackel and Higham (correlation or covariance), eigen_compare
+  ewma           : EW covariance / variance / correlation, two-lambda covariance, n_eff
+  simulation     : simulate_normal (Cholesky or PCA), PCA root, variance explained, mv t
+Week 4
+  returns        : arithmetic / log returns from prices, demeaning
+  var            : normal, t and historical VaR and ES, risk_table, var_es_table
+  portfolio      : covariance from correlations, portfolio variance, scenario P&L
+  tails          : tail-event counts, subadditivity check
+  regime         : variance break point, normal-mixture kurtosis
+Week 5
+  copula         : margins, Kendall / Spearman R, Gaussian and t copulas, tail dependence
+  portfolio_risk : shares for weights, $ VaR / ES by historical, delta normal, normal MC, copula
+  factor         : single-index OLS model, residual covariance, factor simulation
+
+Every function has a docstring:  help(qrmlib.var)  or  help(qrmlib.copula_risk).
+"""
+from .missing import (observed_mask, joint_obs_counts, complete_rows,
+                      n_complete, missing_summary)
+from .correlation import (cov_complete, corr_complete, cov_pairwise, corr_pairwise,
+                          eigenvalues, min_eigenvalue, is_psd, corr_matrices,
+                          largest_gap, cov_to_corr, to_latex_grid,
+                          ranked_changes)
+from .cholesky import (CholeskyError, CholeskyResult, chol_pd, chol_psd,
+                       attempt_cholesky)
+from .psd_repair import (HighamResult, frobenius_distance, rebonato_jackel,
+                         higham_nearest_correlation, near_psd_cov, eigen_compare)
+from .portfolio import (full_history_std, full_history_var, cov_from_corr, portfolio_variance,
+                        tracking_weights, scenario_pnl)
+
+from .returns import return_calculate, demean
+from .ewma import (ew_weights, ew_covariance, ew_variance, ew_std,
+                   effective_sample_size, half_life, weight_on_recent, ew_std_error,
+                   ew_cov_df, ew_correlation, ew_std_vector, ew_mixed_covariance)
+from .moments import (four_moments, skew_kurt_std_errors, jarque_bera, extreme_influence,
+                      first4_moments, quantile_exceedance)
+from .criteria import aic, aicc, bic
+from .fitting import (TFit, fit_normal, fit_t, compare_normal_t,
+                      NIGFit, fit_nig, fit_normal_t_nig)
+from .var import (var_normal, var_t, var_historical, var_noise_normal,
+                  es_historical, es_normal, es_t, var_es_table, risk_table)
+from .tails import tail_counts, subadditivity
+from .regime import variance_breakpoint, regime_stds, normal_mixture_moments
+
+from .copula import (MarginFit, fit_margin, fit_margins, margin_table, to_uniforms,
+                     from_uniforms, pseudo_uniforms, joint_tail_counts,
+                     expected_joint_tail_independent, kendall_corr, spearman_corr,
+                     gaussian_copula_logpdf, t_copula_logpdf, CopulaFit,
+                     fit_gaussian_copula, fit_t_copula, simulate_gaussian_copula,
+                     simulate_t_copula, t_tail_dependence, gaussian_tail_dependence,
+                     fit_chosen_margins, copula_corr, compare_copulas)
+from .factor import OLSFit, ols, FactorModel, fit_factor_model
+from .simulation import (variance_explained, pca_root, simulate_normal, simulate_mvt,
+                         mvt_logpdf)
+from .portfolio_risk import (group_pnl, shares_for_weights, position_values, pnl_from_returns,
+                             historical_risk, delta_normal_risk, normal_mc_risk,
+                             copula_risk, compare_methods)
+from .regression import (OLSResult, ols_se, MLERegression, mle_regression_normal,
+                         mle_regression_t)
+from .conditional import (conditional_normal, ConditionalLine, conditional_line,
+                          band_inside, coverage_by_bucket)
+from .timeseries import acf_band, plot_ts, fit_ar_ma, aicc_table, best_model
+
+__version__ = "0.7.0"
